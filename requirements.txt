@@ -7,3 +7,6 @@ Sphinx
 coverage
 awscli
 flake8
+pandas
+numpy
+black
