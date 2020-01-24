@@ -71,9 +71,6 @@ df['length'].replace(-666, np.nan,  inplace=True)
 
 
 
-
-
-
 # Compress holes data:
 new_holes = []
 for entry in df['holes']:
@@ -97,6 +94,9 @@ with open("pa_positions.txt", 'w') as f:
         f.write(str(s) + '\n')
 
 
+
+# Create column computing difference between course par and SSE
+df['par-sse'] = df['par'] - df['sse']
 
 
 # Save processed dataframe
