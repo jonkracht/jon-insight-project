@@ -32,6 +32,12 @@ print(reg.score(x, y))
 
 print(reg.coef_)
 
+sklearn.metrics.precision_recall_fscore_support(y_true, y_pred, beta=1.0, labels=None, pos_label=1, average=None,
+                                                warn_for=('precision', 'recall', 'f-score'), sample_weight=None,
+                                                zero_division='warn')[source]
+
+
+
 print('hello')
 
 

@@ -27,7 +27,7 @@ plt.show()
 geometry = [Point(xy) for xy in zip(df['longitude'], df['latitude'])]
 
 geo_df = gpd.GeoDataFrame(df, crs = crs, geometry= geometry)
-~df['region'].isin(['AL','HI'])
+
 geo_df.head()
 
 

@@ -1,31 +1,22 @@
-# Script to process raw data scraped from DGCR
+# Script to process/refactor data scraped from the DGCR website with 'make_course_database'
+
 import pandas as pd
 import numpy as np
-import json
+
 
 # Load json file of scraped data
 #file_name, save_name = '/home/jon/PycharmProjects/jon-insight-project/jon_insight_project/data/pa_course_database.json', 'pa_course_database_processed'
 file_name , save_name = '/home/jon/PycharmProjects/jon-insight-project/jon_insight_project/data/all_course_database.json', 'all_courses_database_processed'
 
-
 df = pd.read_json(file_name)
 
 
-
-
-
-
-
-
-
-# For brevity, recast URL as DGCR id
+# Reform website 'url' into 'dgcr_id' (for brevity, mainly)
 df['dgcr_id'] = df['url'].str.split('id=', expand = True).iloc[:, 1]
 #df = df.drop(columns = ['url'])
 
 
-
-
-# Create 'hilliness' and 'woodedness' numerical features from 'landscape' categorical feature
+# Create 'hills' and 'woods' numerical features from 'landscape' categorical feature
 landscape_split = df['landscape'].str.split("&", expand = True)
 df['hills'], df['woods'] = landscape_split[0], landscape_split[1]
 
@@ -36,17 +27,18 @@ df['hills'] = df['hills'].str.strip().map(hill_dict)
 df['woods'] = df['woods'].str.strip().map(wood_dict)
 
 
-
-
-
-
-
-
-
-# Recast 'multiple_tees_pins' into 'multiple_layouts'
+# Recast 'multiple_tees_pins' into Boolean 'multiple_layouts' feature
 df['multiple_layouts'] = df['multiple_tees_pins'].str.contains('Yes', regex = False)
 
 
+
+
+
+
+
+
+
+# Address missing values
 
 
 
@@ -201,12 +193,7 @@ if file_name == '/home/jon/PycharmProjects/jon-insight-project/jon_insight_proje
 
 df2 = df[col_ordering]
 
-
-
-
-
-# Save processed dataframe
-
+# Save processed dataframe as a .plk
 df2.to_pickle(save_name + '.plk')
 
 
