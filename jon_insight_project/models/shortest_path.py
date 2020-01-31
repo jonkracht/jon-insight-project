@@ -1,22 +1,4 @@
-import streamlit as st
-import numpy as np
-import pandas as pd
 
-
-def _max_width_():
-    """Decrease left margin of the app; from https://discuss.streamlit.io/t/custom-render-widths/81/8"""
-
-    max_width_str = f"max-width: 2000px;"
-    st.markdown(
-        f"""
-    <style>
-    .reportview-container .main .block-container{{
-        {max_width_str}
-    }}
-    </style>    
-    """,
-        unsafe_allow_html=True,
-    )
 
 
 def get_driving_time(place_1, place_2, speed = 40):
@@ -36,7 +18,8 @@ def get_latlon_from_zip(zip_code):
     from geopy.geocoders import Nominatim
 
     geolocator = Nominatim(user_agent="specify_your_app_name_here")
-    result = geolocator.geocode({"postalcode": zip_code})
+    #result = geolocator.geocode({"postalcode": zip_code})
+    result = Nominatim.geocode({"postalcode": zip_code})
 
     return (result.latitude, result.longitude)
 
@@ -71,7 +54,7 @@ def plot_courses_map(df):
 
 
 def find_nearby_courses(df, start_zip, max_drive_time):
-    """Update dataframe of courses to only those within a certain distance of starting location."""
+    """Updata dataframe of courses to only those within a certain distance of starting location."""
 
     # Cast latitudes/longitudes as tuples
     latlong = list(zip(df['latitude'], df['longitude']))
@@ -88,22 +71,12 @@ def find_nearby_courses(df, start_zip, max_drive_time):
 def get_user_prefs():
     """Query user for their preferences and return results in a dictionary."""
 
-    st.write('')
-    st.subheader('Enter some parameters of your trip.')
-
     prefs = {}
 
-    prefs['starting_location'] = st.text_input("ZIP code of starting location:")
-    prefs['max_travel_hours'] = st.selectbox('Maximum drive time between courses [hours]:', ['' ,0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
-    prefs['n_destinations'] = st.text_input("Number of courses to be played:")
+    prefs['starting_location'] = '28105'
+    prefs['max_travel_hours'] = 2
+    prefs['n_destinations'] = 4
 
-    submit = st.button('Continue')
-
-    if submit:
-        if prefs['starting_location'] != '' and prefs['max_travel_hours'] != '' and  prefs['n_destinations'] != '':
-            return prefs
-        else:
-            st.write('Please input additional information.')
     return prefs
 
 
@@ -127,44 +100,30 @@ def find_next_course(df, user_prefs, visited_courses):
     return df_nearby_ranked.iloc[0, :]['dgcr_id']
 
 
-
 ###############################################################
 
+
 def main():
+    import pandas as pd
 
-    _max_width_()
-
+    # Load data frame of course information
     file_name = '/home/jon/PycharmProjects/jon-insight-project/jon_insight_project/features/all_courses_database_processed.plk'
     df = pd.read_pickle(file_name)
 
-    st.title('LocalRoute')
-
-    st.header('Planning the ideal disc golf road trip')
-
     # Obtain user preferences
     user_prefs = get_user_prefs()
+
     visited_courses = []
 
-    if user_prefs['starting_location'] != '' and user_prefs['max_travel_hours'] != '' and  user_prefs['n_destinations'] != '':
+    for i in range(user_prefs['n_destinations']):
 
-        current_location = user_prefs['starting_location']
+        visited_courses.append(find_next_course(df, user_prefs, visited_courses))
 
-        with st.spinner('**Computing optimal route**'):
-            for i in range(int(user_prefs['n_destinations'])):
-                visited_courses.append(find_next_course(df, user_prefs, visited_courses))
-
-        # Display results
-        st.write(100*'\n')
-        st.header('LocalRoute:')
-        for entry in visited_courses:
-            st.table(df[df['dgcr_id'] == entry])
+        print(visited_courses)
+        print('Finished a loop.')
 
     return
 
 
 if __name__ == '__main__':
     main()
-
-
-
-

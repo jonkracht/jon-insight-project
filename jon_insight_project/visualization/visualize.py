@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 import numpy as np
 
+sns.set(font_scale=2)
+
 
 # Path to processed data
 #file_name = '/home/jon/PycharmProjects/jon-insight-project/jon_insight_project/features/pa_course_database_processed.plk'
@@ -27,9 +29,20 @@ print('Average rating over all courses:  ' + str(df.rating.mean().round(2)))
 sns.distplot(df['hills'])
 plt.show()
 
+sns. distplot(df['difficulty'])
+plt.show()
+
 
 sns.catplot(x="hills", y = "rating", data = df, alpha = alpha_val)
 plt.show()
+
+print(df[df['hills'] == 0]['rating'].mean())
+print(df[df['hills'] == 1]['rating'].mean())
+print(df[df['hills'] == 2]['rating'].mean())
+
+print(df[df['woods'] == 0]['rating'].mean())
+print(df[df['woods'] == 1]['rating'].mean())
+print(df[df['woods'] == 2]['rating'].mean())
 
 sns.catplot(x="woods", y = "rating", data = df, alpha = alpha_val)
 plt.show()
@@ -38,12 +51,12 @@ sns.catplot(x = "multiple_layouts", y = "rating", data = df, alpha = alpha_val)
 plt.show()
 
 
-sns.distplot(df.length, bins=20)
+sns.distplot(df.length/df.holes, bins=20)
 plt.show()
 
 
 df['par-sse'] = df['par'].astype('float') - df['sse']
-sns.jointplot(x = 'rating', y = 'par-sse', data = df, alpha = alpha_val)
+sns.jointplot(x = 'rating', y = 'difficulty', data = df, alpha = alpha_val)
 plt.show()
 
 sns.jointplot(x = 'year_established', y = 'rating', data = df, alpha = alpha_val)

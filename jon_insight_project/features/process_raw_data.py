@@ -37,7 +37,6 @@ df['multiple_layouts'] = df['multiple_tees_pins'].str.contains('Yes', regex = Fa
 
 
 
-
 # Address missing values
 
 
@@ -124,7 +123,6 @@ df['holes'] = new_holes
 
 
 
-
 # Correct (single) incorrect longitude value
 df.loc[df['longitude'] > 0, 'longitude'] *= -1
 
@@ -134,6 +132,10 @@ df.loc[df['longitude'] > 0, 'longitude'] *= -1
 x = []
 for pos_x, pos_y in zip(df['longitude'].values, df['latitude'].values):
     x.append((pos_x, pos_y))
+
+
+
+
 with open("pa_positions.txt", 'w') as f:
     for s in x:
         f.write(str(s) + '\n')
@@ -157,13 +159,15 @@ df = df.loc[~df.isnull().any(axis=1), :]
 df = df.loc[~(df['length'] == ''), :]
 
 
-
 # Cast columns in correct form
 df['hills'] = pd.to_numeric(df['hills']).astype(int)
 df['woods'] = pd.to_numeric(df['woods']).astype(int)
 df['rating_count'] = pd.to_numeric(df['rating_count']).astype(int)
 df['length'] = pd.to_numeric(df['length']).astype(int)
 df['year_established'] = pd.to_numeric(df['year_established']).astype(int)
+
+# Compute a 'difficulty' metric
+df['difficulty'] = (df['sse'] - pd.to_numeric(df['par']).astype(float)) / df['holes']
 
 
 # Eliminate Alaska, Hawaii, and Saipan for simplicity
@@ -172,10 +176,11 @@ df = df[~df['region'].isin(['AK', 'HI', 'MP'])]
 
 
 col_ordering = ['name', 'locality', 'region', 'postal_code', 'latitude', 'longitude',
-                'dgcr_id', 'year_established', 'course_type', 'tee_type', 'basket_type',
+                'dgcr_id', 'year_established', 'tee_type', 'basket_type',
                 'holes', 'length', 'hours_to_play', 'multiple_layouts',
                 'hills', 'woods',
-                'par', 'sse', 'rating', 'rating_count']
+                'par', 'sse', 'difficulty',
+                'rating', 'rating_count']
 
 
 # Remove courses with 0 for latitude/longitude:
