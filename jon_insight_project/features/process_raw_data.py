@@ -2,7 +2,7 @@
 
 import pandas as pd
 import numpy as np
-
+import csv
 
 # Load json file of scraped data
 #file_name, save_name = '/home/jon/PycharmProjects/jon-insight-project/jon_insight_project/data/pa_course_database.json', 'pa_course_database_processed'
@@ -201,6 +201,9 @@ df2 = df[col_ordering]
 # Save processed dataframe as a .plk
 df2.to_pickle(save_name + '.plk')
 
+
+# Save via csv
+df2.to_csv('all_courses_database_processed.csv')
 
 print('Finished.')
 

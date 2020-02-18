@@ -10,7 +10,8 @@ from shapely.geometry import Point, Polygon
 #file_name = '/home/jon/PycharmProjects/jon-insight-project/data/processed/pa_course_database_processed.plk'
 
 # US
-map_file = '/home/jon/PycharmProjects/jon-insight-project/data/external/cb_2018_us_nation_20m/cb_2018_us_nation_20m.shp'
+#map_file = '/home/jon/PycharmProjects/jon-insight-project/data/external/cb_2018_us_nation_20m/cb_2018_us_nation_20m.shp'
+map_file = '/home/jon/PycharmProjects/jon-insight-project/data/external/states_21basic/states.shp'
 file_name = '/home/jon/PycharmProjects/jon-insight-project/jon_insight_project/features/all_courses_database_processed.plk'
 
 df = pd.read_pickle(file_name)

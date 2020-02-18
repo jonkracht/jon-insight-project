@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 import numpy as np
 
-sns.set(font_scale=2)
+sns.set(font_scale=3)
 
 
 # Path to processed data
@@ -24,14 +24,23 @@ print('Average rating over all courses:  ' + str(df.rating.mean().round(2)))
 
 
 
-# Create plots
+# # Create plots
+#
+# sns.distplot(df['length'])
+# plt.show()
+#
+# sns.distplot(df['hills'])
+# plt.show()
+#
+# sns. distplot(df['difficulty'])
+# plt.show()
 
-sns.distplot(df['hills'])
+
+sns.boxplot(x="hills", y = "rating", data = df, color = 'red')
 plt.show()
 
-sns. distplot(df['difficulty'])
+sns.boxplot(x="woods", y = "rating", data = df, color = 'green')
 plt.show()
-
 
 sns.catplot(x="hills", y = "rating", data = df, alpha = alpha_val)
 plt.show()
